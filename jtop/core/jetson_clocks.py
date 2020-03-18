@@ -48,7 +48,7 @@ class JetsonClocks(object):
 
     @property
     def status(self):
-        p = sp.Popen(['systemctl', 'is-active', self.service + '.service'], stdout=sp.PIPE)
+        p = sp.Popen(['systemctl', 'is-active', self.service + '.service'], stdout=sp.PIPE, stderr=sp.PIPE)
         out, _ = p.communicate()
         return str(out.decode("utf-8")).strip()
 
@@ -68,7 +68,7 @@ class JetsonClocks(object):
 
     @property
     def enable(self):
-        p = sp.Popen(['systemctl', 'is-enabled', self.service + '.service'], stdout=sp.PIPE)
+        p = sp.Popen(['systemctl', 'is-enabled', self.service + '.service'], stdout=sp.PIPE, stderr=sp.PIPE)
         out, _ = p.communicate()
         enable_val = True if str(out.decode("utf-8")).strip() == "enabled" else False
         return enable_val
@@ -78,7 +78,7 @@ class JetsonClocks(object):
         if not isinstance(value, bool):
             raise Exception("Use a boolean")
         enable_val = "enable" if value else "disable"
-        p = sp.Popen(['systemctl', enable_val, self.service + '.service'], stdout=sp.PIPE, stderr=sp.PIPE)
+        p = sp.Popen(['systemctl', enable_val, self.service + '.service'], stdout=sp.PIPE)
         _, err = p.communicate()
         self.last_status = err.decode("utf-8")
 
